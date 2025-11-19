@@ -1,0 +1,3377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Bite AI | Intelligent Food Waste Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #27AE60;
+            --primary-dark: #219653;
+            --secondary: #E74C3C;
+            --accent: #F39C12;
+            --co2-color: #2980B9;
+            --light: #F8F9FA;
+            --dark: #2C3E50;
+            --gray: #7F8C8D;
+            --danger: #E74C3C;
+            --warning: #F39C12;
+            --success: #27AE60;
+            --info: #3498DB;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--gray);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            width: 180px;
+            display: none;
+            z-index: 100;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: background 0.3s;
+        }
+        
+        .dropdown-menu a:hover {
+            background: #f5f5f5;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .hero-buttons .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+        }
+        
+        /* Dashboard Section */
+        .dashboard {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--dark);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .stat-card.co2-stat {
+            border-top-color: var(--co2-color);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card.co2-stat i {
+            color: var(--co2-color);
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .stat-card p {
+            color: var(--gray);
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .food-list {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .food-list h3 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .food-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .food-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .food-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .food-details h4 {
+            margin-bottom: 5px;
+        }
+        
+        .food-details p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .expiration {
+            font-weight: 500;
+        }
+        
+        .expiring-soon {
+            color: var(--warning);
+        }
+        
+        .expired {
+            color: var(--danger);
+        }
+        
+        .good {
+            color: var(--success);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+        
+        .action-btn:hover {
+            color: var(--primary);
+        }
+        
+        .recommendations {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .recommendation-item {
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+            background-color: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .recommendation-item h4 {
+            margin-bottom: 5px;
+        }
+        
+        .recommendation-item p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        /* Analytics Section */
+        .analytics {
+            padding: 60px 0;
+            background-color: var(--light);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+        }
+        
+        /* How It Works Section */
+        .how-it-works {
+            padding: 60px 0;
+            background-color: var(--light);
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            position: relative;
+        }
+        
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background-color: var(--primary);
+            z-index: 1;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+        
+        .step h3 {
+            margin-bottom: 10px;
+        }
+        
+        /* Impact Section */
+        .impact {
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .impact-stat {
+            text-align: center;
+        }
+        
+        .impact-stat h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        /* CO2 Section */
+        .co2-impact {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .co2-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .co2-text {
+            padding-right: 20px;
+        }
+        
+        .co2-visual {
+            text-align: center;
+        }
+        
+        .co2-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(var(--co2-color) 0% 65%, #e0e0e0 65% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .co2-circle::before {
+            content: '';
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .co2-value {
+            position: relative;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--co2-color);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        /* Add Food Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .add-food-btn {
+            display: block;
+            margin: 30px auto 0;
+            padding: 12px 30px;
+        }
+        
+        /* Scanner Section */
+        .scanner {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .scanner-placeholder {
+            width: 200px;
+            height: 200px;
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            cursor: pointer;
+        }
+        
+        .scanner-placeholder i {
+            font-size: 3rem;
+            color: var(--gray);
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-good {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+        
+        .status-warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-danger {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+        
+        /* Auth Modal */
+        .auth-modal {
+            display: none;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+        
+        .notification.error {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .notification.warning {
+            border-left: 4px solid var(--warning);
+        }
+        
+        /* New Features */
+        .shopping-list {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 30px;
+        }
+        
+        .shopping-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .shopping-item:last-child {
+            border-bottom: none;
+        }
+        
+        .shopping-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .meal-plan {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 30px;
+        }
+        
+        .meal-day {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .meal-day:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .meal-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        /* NEW FEATURES STYLES */
+        
+        /* Food Donation Section */
+        .donation-section {
+            padding: 60px 0;
+            background-color: var(--light);
+        }
+        
+        .donation-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .donation-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .donation-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .donation-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        /* Food Preservation Tips */
+        .preservation-tips {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .tip-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .tip-card h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Community Section */
+        .community {
+            padding: 60px 0;
+            background-color: var(--light);
+        }
+        
+        .community-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .community-stat {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .community-stat i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        /* Smart Notifications */
+        .notifications-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .notification-settings {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 30px;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .steps::before {
+                display: none;
+            }
+            
+            .co2-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .notification {
+                right: 10px;
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <div class="logo-text">
+                        <span>Smart Bite AI</span>
+                        <span class="logo-subtitle">Intelligent Food Management</span>
+                    </div>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active" data-section="dashboard">Dashboard</a>
+                    <a href="#" class="nav-link" data-section="analytics">Analytics</a>
+                    <a href="#" class="nav-link" data-section="recipes">Recipes</a>
+                    <a href="#" class="nav-link" data-section="shopping">Shopping List</a>
+                    <a href="#" class="nav-link" data-section="meal-plan">Meal Plan</a>
+                    <a href="#" class="nav-link" data-section="donation">Donate Food</a>
+                    <a href="#" class="nav-link" data-section="preservation">Food Preservation</a>
+                </div>
+                <div class="auth-buttons" id="authButtons">
+                    <button class="btn btn-outline" id="loginBtn">Log In</button>
+                    <button class="btn btn-primary" id="signupBtn">Sign Up Free</button>
+                </div>
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span id="userName">User</span>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="#" id="profileLink">Profile</a>
+                        <a href="#" id="settingsLink">Settings</a>
+                        <a href="#" id="logoutLink">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Waste Less, Save More with AI</h1>
+                <p>Smart Bite AI helps households, restaurants, and grocery stores track food inventory, predict expiration, and reduce waste with intelligent recommendations.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="getStartedBtn">Get Started</button>
+                    <button class="btn btn-outline" style="background: rgba(255,255,255,0.2); color: white; border-color: white;">Watch Demo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="dashboardSection">
+        <div class="container">
+            <h2 class="section-title">Your Smart Food Dashboard</h2>
+            
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <i class="fas fa-apple-alt"></i>
+                    <h3 id="itemsTracked">0</h3>
+                    <p>Items Tracked</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3 id="expiringSoon">0</h3>
+                    <p>Expiring Soon</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-recycle"></i>
+                    <h3 id="wastePrevented">0kg</h3>
+                    <p>Waste Prevented</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3 id="moneySaved">$0</h3>
+                    <p>Money Saved</p>
+                </div>
+                <div class="stat-card co2-stat">
+                    <i class="fas fa-cloud"></i>
+                    <h3 id="co2Reduced">0kg</h3>
+                    <p>CO₂ Reduced</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-hands-helping"></i>
+                    <h3 id="donationsMade">0</h3>
+                    <p>Donations Made</p>
+                </div>
+            </div>
+            
+            <div class="scanner">
+                <h3>Quick Add with Smart Scanner</h3>
+                <p>Scan barcodes or take photos of your food items</p>
+                <div class="scanner-placeholder" id="scannerBtn">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <p>Click to scan or <a href="#" id="manualAddBtn">add manually</a></p>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="food-list">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Your Food Inventory</h3>
+                        <button class="btn btn-primary" id="addFoodBtn">
+                            <i class="fas fa-plus"></i> Add Food Item
+                        </button>
+                    </div>
+                    <div id="foodItemsContainer">
+                        <div class="spinner" id="foodItemsSpinner"></div>
+                    </div>
+                </div>
+                
+                <div class="recommendations">
+                    <h3>AI Recommendations</h3>
+                    <div id="recommendationsContainer">
+                        <div class="spinner" id="recommendationsSpinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section class="analytics" id="analyticsSection" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Food Waste Analytics</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <canvas id="wasteChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="co2Chart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="savingsChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipes Section -->
+    <section class="features" id="recipesSection" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Smart Recipes</h2>
+            <div id="recipesContainer">
+                <div class="spinner" id="recipesSpinner"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping List Section -->
+    <section class="dashboard" id="shoppingSection" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Smart Shopping List</h2>
+            <div class="shopping-list">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Your Shopping List</h3>
+                    <button class="btn btn-primary" id="addShoppingItemBtn">
+                        <i class="fas fa-plus"></i> Add Item
+                    </button>
+                </div>
+                <div id="shoppingItemsContainer">
+                    <div class="spinner" id="shoppingItemsSpinner"></div>
+                </div>
+            </div>
+            <div class="recommendations">
+                <h3>Smart Shopping Tips</h3>
+                <div class="recommendation-item">
+                    <h4>Buy in Season</h4>
+                    <p>Seasonal produce is often cheaper and lasts longer.</p>
+                </div>
+                <div class="recommendation-item">
+                    <h4>Check Your Inventory</h4>
+                    <p>Make sure you're not buying items you already have.</p>
+                </div>
+                <div class="recommendation-item">
+                    <h4>Plan Meals</h4>
+                    <p>Plan your meals for the week to avoid overbuying.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meal Plan Section -->
+    <section class="dashboard" id="mealPlanSection" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Weekly Meal Plan</h2>
+            <div id="mealPlanContainer">
+                <div class="spinner" id="mealPlanSpinner"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Food Donation Section -->
+    <section class="donation-section" id="donationSection" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Donate Surplus Food</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px;">Help reduce food waste by donating surplus food to local charities and food banks. Make a difference in your community.</p>
+            
+            <div class="donation-options">
+                <div class="donation-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Find Food Banks</h3>
+                    <p>Locate nearby food banks and charities that accept food donations.</p>
+                    <button class="btn btn-primary" style="margin-top: 15px;">Find Nearby</button>
+                </div>
+                <div class="donation-card">
+                    <i class="fas fa-car"></i>
+                    <h3>Schedule Pickup</h3>
+                    <p>Arrange for your surplus food to be picked up from your location.</p>
+                    <button class="btn btn-primary" style="margin-top: 15px;">Schedule Now</button>
+                </div>
+                <div class="donation-card">
+                    <i class="fas fa-history"></i>
+                    <h3>Donation History</h3>
+                    <p>Track your past donations and their impact on the community.</p>
+                    <button class="btn btn-primary" style="margin-top: 15px;">View History</button>
+                </div>
+            </div>
+            
+            <div class="chart-container" style="margin-top: 40px;">
+                <h3>Your Donation Impact</h3>
+                <canvas id="donationChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Food Preservation Section -->
+    <section class="preservation-tips" id="preservationSection" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Food Preservation Tips</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px;">Learn how to extend the life of your food with these proven preservation techniques.</p>
+            
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3><i class="fas fa-snowflake"></i> Proper Refrigeration</h3>
+                    <p>Store fruits and vegetables in the right compartments to maximize freshness. Keep your refrigerator at or below 4°C (40°F).</p>
+                </div>
+                <div class="tip-card">
+                    <h3><i class="fas fa-temperature-low"></i> Freezing Techniques</h3>
+                    <p>Blanch vegetables before freezing to preserve color, texture, and nutrients. Use airtight containers to prevent freezer burn.</p>
+                </div>
+                <div class="tip-card">
+                    <h3><i class="fas fa-jar"></i> Canning & Pickling</h3>
+                    <p>Preserve seasonal produce through canning and pickling. These methods can extend shelf life by months or even years.</p>
+                </div>
+                <div class="tip-card">
+                    <h3><i class="fas fa-wind"></i> Dehydration</h3>
+                    <p>Remove moisture from foods to prevent spoilage. Great for fruits, vegetables, and herbs.</p>
+                </div>
+                <div class="tip-card">
+                    <h3><i class="fas fa-box"></i> Proper Storage</h3>
+                    <p>Keep potatoes and onions in a cool, dark place. Store bananas separately as they emit ethylene gas that speeds ripening.</p>
+                </div>
+                <div class="tip-card">
+                    <h3><i class="fas fa-recycle"></i> Repurposing Scraps</h3>
+                    <p>Use vegetable scraps to make broth, regrow green onions, or create compost for your garden.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Community Impact Section -->
+    <section class="community">
+        <div class="container">
+            <h2 class="section-title">Community Impact</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px;">Join thousands of users making a difference in the fight against food waste.</p>
+            
+            <div class="community-stats">
+                <div class="community-stat">
+                    <i class="fas fa-users"></i>
+                    <h3>15,842</h3>
+                    <p>Active Community Members</p>
+                </div>
+                <div class="community-stat">
+                    <i class="fas fa-utensils"></i>
+                    <h3>42,569</h3>
+                    <p>Meals Donated This Month</p>
+                </div>
+                <div class="community-stat">
+                    <i class="fas fa-leaf"></i>
+                    <h3>186,425</h3>
+                    <p>Kg of CO₂ Reduced</p>
+                </div>
+                <div class="community-stat">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3>$2.1M</h3>
+                    <p>Collective Savings</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary">Join Community Challenges</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Smart Notifications Section -->
+    <section class="notifications-section">
+        <div class="container">
+            <h2 class="section-title">Smart Notifications</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px;">Stay informed with personalized alerts about your food inventory and consumption patterns.</p>
+            
+            <div class="notification-settings">
+                <h3>Notification Preferences</h3>
+                <div class="setting-item">
+                    <div>
+                        <h4>Expiration Alerts</h4>
+                        <p>Get notified when items are about to expire</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <h4>Consumption Suggestions</h4>
+                        <p>Receive recipe ideas for items that need to be used soon</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <h4>Shopping Reminders</h4>
+                        <p>Get reminders to purchase frequently used items</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <h4>Weekly Reports</h4>
+                        <p>Receive weekly summaries of your food waste reduction</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CO2 Impact Section -->
+    <section class="co2-impact">
+        <div class="container">
+            <h2 class="section-title">Environmental Impact</h2>
+            <div class="co2-content">
+                <div class="co2-text">
+                    <h3>Reducing Your Carbon Footprint</h3>
+                    <p>Food waste is a major contributor to greenhouse gas emissions. When food ends up in landfills, it decomposes and releases methane, a potent greenhouse gas that is 25 times more effective at trapping heat in the atmosphere than CO₂.</p>
+                    <p>By reducing food waste with Smart Bite AI, you're not just saving money - you're actively fighting climate change.</p>
+                    <div class="impact-facts">
+                        <h4>Key Facts:</h4>
+                        <ul>
+                            <li>Food waste accounts for 8% of global greenhouse gas emissions</li>
+                            <li>1kg of food waste prevented = 2.5kg of CO₂ equivalent reduced</li>
+                            <li>If food waste were a country, it would be the 3rd largest emitter after China and the US</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="co2-visual">
+                    <div class="co2-circle">
+                        <div class="co2-value">65%</div>
+                    </div>
+                    <p>Reduction in your food-related carbon footprint</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Smart Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-camera"></i>
+                    <h3>Smart Scanning</h3>
+                    <p>AI-powered barcode and image recognition to automatically add items with expiry dates.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Predictive Analytics</h3>
+                    <p>Machine learning algorithms predict when food will expire based on purchase patterns.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Smart Recipes</h3>
+                    <p>Personalized recipe suggestions based on ingredients you need to use soon.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-hands-helping"></i>
+                    <h3>Donation Network</h3>
+                    <p>Connect with local food banks and charities to donate surplus food.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Smart Shopping</h3>
+                    <p>Intelligent shopping lists that prevent over-purchasing and future waste.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Carbon Tracking</h3>
+                    <p>Monitor your environmental impact with real-time CO₂ reduction metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bell"></i>
+                    <h3>Smart Notifications</h3>
+                    <p>Personalized alerts for expiring items and consumption suggestions.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Community Challenges</h3>
+                    <p>Participate in challenges with other users to reduce food waste together.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Food Preservation Guide</h3>
+                    <p>Learn techniques to extend the life of your food and reduce waste.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How Smart Bite AI Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Add Your Food</h3>
+                    <p>Scan receipts, barcodes, or manually add items to your digital pantry.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Tracking</h3>
+                    <p>Our AI tracks expiration dates and sends smart alerts before items go bad.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Recommendations</h3>
+                    <p>Receive consumption ideas, recipes, and donation options for expiring items.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Reduce Waste & CO₂</h3>
+                    <p>Make informed decisions to minimize food waste and reduce your carbon footprint.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact">
+        <div class="container">
+            <h2 class="section-title">Our Environmental Impact</h2>
+            <div class="impact-stats">
+                <div class="impact-stat">
+                    <h3>12,458</h3>
+                    <p>Kg of Food Saved</p>
+                </div>
+                <div class="impact-stat">
+                    <h3>31,145</h3>
+                    <p>Kg of CO₂ Reduced</p>
+                </div>
+                <div class="impact-stat">
+                    <h3>$189,420</h3>
+                    <p>Total Money Saved</p>
+                </div>
+                <div class="impact-stat">
+                    <h3>3,284</h3>
+                    <p>Active Users</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Smart Bite AI</h3>
+                    <p>Intelligent food management to reduce waste, save money, and help the planet.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" class="nav-link" data-section="dashboard">Dashboard</a></li>
+                        <li><a href="#" class="nav-link" data-section="analytics">Analytics</a></li>
+                        <li><a href="#" class="nav-link" data-section="recipes">Recipes</a></li>
+                        <li><a href="#" class="nav-link" data-section="shopping">Shopping List</a></li>
+                        <li><a href="#" class="nav-link" data-section="meal-plan">Meal Plan</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                        <li><a href="#">Food Waste Facts</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to get tips on reducing food waste and product updates.</p>
+                    <form id="newsletterForm">
+                        <input type="email" placeholder="Your email address" style="padding: 10px; width: 100%; margin-bottom: 10px; border-radius: 5px; border: none;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Smart Bite AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add Food Modal -->
+    <div class="modal" id="addFoodModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Food Item</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="addFoodForm">
+                <div class="form-group">
+                    <label for="foodName">Food Name</label>
+                    <input type="text" id="foodName" class="form-control" placeholder="e.g., Apples, Milk, Bread" required>
+                </div>
+                <div class="form-group">
+                    <label for="foodCategory">Category</label>
+                    <select id="foodCategory" class="form-control" required>
+                        <option value="">Select a category</option>
+                        <option value="fruits">Fruits</option>
+                        <option value="vegetables">Vegetables</option>
+                        <option value="dairy">Dairy</option>
+                        <option value="meat">Meat & Poultry</option>
+                        <option value="grains">Grains & Bread</option>
+                        <option value="beverages">Beverages</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date</label>
+                    <input type="date" id="expiryDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" class="form-control" placeholder="e.g., 5" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary add-food-btn">Add to Inventory</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Shopping Item Modal -->
+    <div class="modal" id="addShoppingItemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Shopping Item</h3>
+                <button class="close-btn" id="closeShoppingModalBtn">&times;</button>
+            </div>
+            <form id="addShoppingItemForm">
+                <div class="form-group">
+                    <label for="shoppingItemName">Item Name</label>
+                    <input type="text" id="shoppingItemName" class="form-control" placeholder="e.g., Milk, Bread, Eggs" required>
+                </div>
+                <div class="form-group">
+                    <label for="shoppingItemCategory">Category</label>
+                    <select id="shoppingItemCategory" class="form-control" required>
+                        <option value="">Select a category</option>
+                        <option value="fruits">Fruits</option>
+                        <option value="vegetables">Vegetables</option>
+                        <option value="dairy">Dairy</option>
+                        <option value="meat">Meat & Poultry</option>
+                        <option value="grains">Grains & Bread</option>
+                        <option value="beverages">Beverages</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="shoppingItemQuantity">Quantity</label>
+                    <input type="number" id="shoppingItemQuantity" class="form-control" placeholder="e.g., 2" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="shoppingItemPriority">Priority</label>
+                    <select id="shoppingItemPriority" class="form-control" required>
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary add-food-btn">Add to Shopping List</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal auth-modal" id="authModal">
+        <div class="modal-content">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="loginTab">Login</div>
+                <div class="auth-tab" id="registerTab">Register</div>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Login</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+                </p>
+            </form>
+            
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirm Password</label>
+                    <input type="password" id="registerConfirmPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script>
+        // Backend API Configuration - SIMULATED BACKEND
+        const API_BASE_URL = 'https://api.smartbiteai.com'; 
+        
+        // Simulated Backend - This will work without a real backend
+        class SimulatedBackend {
+            constructor() {
+                this.users = JSON.parse(localStorage.getItem('smartBiteUsers')) || [];
+                this.foodItems = JSON.parse(localStorage.getItem('smartBiteFoodItems')) || [];
+                this.shoppingList = JSON.parse(localStorage.getItem('smartBiteShoppingList')) || [];
+                this.recipes = JSON.parse(localStorage.getItem('smartBiteRecipes')) || this.getDefaultRecipes();
+                this.mealPlans = JSON.parse(localStorage.getItem('smartBiteMealPlans')) || this.getDefaultMealPlans();
+                this.recommendations = JSON.parse(localStorage.getItem('smartBiteRecommendations')) || this.getDefaultRecommendations();
+                this.donations = JSON.parse(localStorage.getItem('smartBiteDonations')) || [];
+            }
+            
+            getDefaultRecipes() {
+                return [
+                    {
+                        id: 1,
+                        name: 'Carrot Ginger Soup',
+                        ingredients: ['Carrots', 'Onions', 'Ginger', 'Vegetable Broth'],
+                        difficulty: 'Easy',
+                        time: '30 min',
+                        icon: 'carrot'
+                    },
+                    {
+                        id: 2,
+                        name: 'Bread Pudding',
+                        ingredients: ['Bread', 'Milk', 'Eggs', 'Sugar'],
+                        difficulty: 'Medium',
+                        time: '45 min',
+                        icon: 'bread-slice'
+                    },
+                    {
+                        id: 3,
+                        name: 'Apple Crumble',
+                        ingredients: ['Apples', 'Flour', 'Sugar', 'Butter'],
+                        difficulty: 'Easy',
+                        time: '40 min',
+                        icon: 'apple-alt'
+                    }
+                ];
+            }
+            
+            getDefaultMealPlans() {
+                return {
+                    days: [
+                        {
+                            name: 'Monday',
+                            meals: [
+                                { id: 1, name: 'Carrot Ginger Soup', selected: true, uses: ['carrots'] }
+                            ]
+                        },
+                        {
+                            name: 'Tuesday',
+                            meals: [
+                                { id: 2, name: 'Chicken Stir Fry', selected: true, uses: ['chicken breast'] }
+                            ]
+                        },
+                        {
+                            name: 'Wednesday',
+                            meals: [
+                                { id: 3, name: 'Bread Pudding', selected: true, uses: ['bread'] }
+                            ]
+                        },
+                        {
+                            name: 'Thursday',
+                            meals: [
+                                { id: 4, name: 'Apple Crumble', selected: true, uses: ['apples'] }
+                            ]
+                        },
+                        {
+                            name: 'Friday',
+                            meals: [
+                                { id: 5, name: 'Pasta with Tomato Sauce', selected: true, uses: [] }
+                            ]
+                        }
+                    ]
+                };
+            }
+            
+            getDefaultRecommendations() {
+                return [
+                    {
+                        id: 1,
+                        title: 'Use Carrots Soon',
+                        description: 'Your carrots are expiring in 2 days. Consider making carrot soup or adding to a salad.',
+                        type: 'Action Needed',
+                        priority: 'medium'
+                    },
+                    {
+                        id: 2,
+                        title: 'Donate Bread',
+                        description: 'Your bread will expire soon. There are 3 food banks nearby that accept bread donations.',
+                        type: 'Urgent',
+                        priority: 'high'
+                    },
+                    {
+                        id: 3,
+                        title: 'Weekly Purchase Pattern',
+                        description: 'You tend to waste 15% of dairy products. Consider buying smaller quantities.',
+                        type: 'Insight',
+                        priority: 'low'
+                    },
+                    {
+                        id: 4,
+                        title: 'Healthy Fruit Salad',
+                        description: 'Use your apples and carrots to make a healthy fruit salad.',
+                        type: 'Recipe',
+                        priority: 'low'
+                    }
+                ];
+            }
+            
+            // Authentication methods
+            async register(userData) {
+                // Check if user already exists
+                if (this.users.find(user => user.email === userData.email)) {
+                    return { 
+                        success: false, 
+                        message: 'User already exists with this email' 
+                    };
+                }
+                
+                // Create new user
+                const newUser = {
+                    id: Date.now().toString(),
+                    name: userData.name,
+                    email: userData.email,
+                    password: userData.password, // In a real app, this would be hashed
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.users.push(newUser);
+                this.saveUsers();
+                
+                // Create auth token (simulated)
+                const token = this.generateToken(newUser);
+                
+                return { 
+                    success: true, 
+                    message: 'Registration successful',
+                    token,
+                    user: { id: newUser.id, name: newUser.name, email: newUser.email }
+                };
+            }
+            
+            async login(credentials) {
+                const user = this.users.find(u => 
+                    u.email === credentials.email && u.password === credentials.password
+                );
+                
+                if (user) {
+                    const token = this.generateToken(user);
+                    return { 
+                        success: true, 
+                        message: 'Login successful',
+                        token,
+                        user: { id: user.id, name: user.name, email: user.email }
+                    };
+                } else {
+                    return { 
+                        success: false, 
+                        message: 'Invalid email or password' 
+                    };
+                }
+            }
+            
+            generateToken(user) {
+                // In a real app, this would be a proper JWT token
+                return btoa(JSON.stringify({
+                    userId: user.id,
+                    email: user.email,
+                    exp: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+                }));
+            }
+            
+            verifyToken(token) {
+                try {
+                    const payload = JSON.parse(atob(token));
+                    if (payload.exp > Date.now()) {
+                        return this.users.find(user => user.id === payload.userId);
+                    }
+                } catch (error) {
+                    console.error('Invalid token:', error);
+                }
+                return null;
+            }
+            
+            // Food items methods
+            async getFoodItems(token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const userFoodItems = this.foodItems.filter(item => item.userId === user.id);
+                return { 
+                    success: true, 
+                    data: userFoodItems 
+                };
+            }
+            
+            async addFoodItem(itemData, token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const newItem = {
+                    id: Date.now().toString(),
+                    userId: user.id,
+                    ...itemData,
+                    addedDate: new Date().toISOString()
+                };
+                
+                this.foodItems.push(newItem);
+                this.saveFoodItems();
+                
+                return { 
+                    success: true, 
+                    message: 'Food item added successfully',
+                    data: newItem
+                };
+            }
+            
+            async deleteFoodItem(id, token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const itemIndex = this.foodItems.findIndex(item => 
+                    item.id === id && item.userId === user.id
+                );
+                
+                if (itemIndex !== -1) {
+                    this.foodItems.splice(itemIndex, 1);
+                    this.saveFoodItems();
+                    return { success: true, message: 'Food item deleted successfully' };
+                } else {
+                    return { success: false, message: 'Food item not found' };
+                }
+            }
+            
+            // Shopping list methods
+            async getShoppingList(token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const userShoppingList = this.shoppingList.filter(item => item.userId === user.id);
+                return { 
+                    success: true, 
+                    data: userShoppingList 
+                };
+            }
+            
+            async addShoppingItem(itemData, token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const newItem = {
+                    id: Date.now().toString(),
+                    userId: user.id,
+                    ...itemData,
+                    completed: false,
+                    addedDate: new Date().toISOString()
+                };
+                
+                this.shoppingList.push(newItem);
+                this.saveShoppingList();
+                
+                return { 
+                    success: true, 
+                    message: 'Shopping item added successfully',
+                    data: newItem
+                };
+            }
+            
+            async updateShoppingItem(id, updates, token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const item = this.shoppingList.find(item => 
+                    item.id === id && item.userId === user.id
+                );
+                
+                if (item) {
+                    Object.assign(item, updates);
+                    this.saveShoppingList();
+                    return { success: true, message: 'Shopping item updated successfully' };
+                } else {
+                    return { success: false, message: 'Shopping item not found' };
+                }
+            }
+            
+            async deleteShoppingItem(id, token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const itemIndex = this.shoppingList.findIndex(item => 
+                    item.id === id && item.userId === user.id
+                );
+                
+                if (itemIndex !== -1) {
+                    this.shoppingList.splice(itemIndex, 1);
+                    this.saveShoppingList();
+                    return { success: true, message: 'Shopping item deleted successfully' };
+                } else {
+                    return { success: false, message: 'Shopping item not found' };
+                }
+            }
+            
+            // Donation methods
+            async getDonations(token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const userDonations = this.donations.filter(donation => donation.userId === user.id);
+                return { 
+                    success: true, 
+                    data: userDonations 
+                };
+            }
+            
+            async addDonation(donationData, token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const newDonation = {
+                    id: Date.now().toString(),
+                    userId: user.id,
+                    ...donationData,
+                    date: new Date().toISOString()
+                };
+                
+                this.donations.push(newDonation);
+                this.saveDonations();
+                
+                return { 
+                    success: true, 
+                    message: 'Donation added successfully',
+                    data: newDonation
+                };
+            }
+            
+            // Other methods
+            async getRecipes(token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                return { 
+                    success: true, 
+                    data: this.recipes 
+                };
+            }
+            
+            async getMealPlan(token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                return { 
+                    success: true, 
+                    data: this.mealPlans 
+                };
+            }
+            
+            async getRecommendations(token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                return { 
+                    success: true, 
+                    data: this.recommendations 
+                };
+            }
+            
+            async getAnalytics(token) {
+                const user = this.verifyToken(token);
+                if (!user) return { success: false, message: 'Invalid token' };
+                
+                const userFoodItems = this.foodItems.filter(item => item.userId === user.id);
+                const userDonations = this.donations.filter(donation => donation.userId === user.id);
+                
+                // Calculate stats
+                const itemsTracked = userFoodItems.length;
+                const today = new Date();
+                const expiringSoon = userFoodItems.filter(item => {
+                    const expiryDate = new Date(item.expiryDate);
+                    const diffTime = expiryDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return diffDays <= 3;
+                }).length;
+                
+                const wastePrevented = (itemsTracked * 0.13).toFixed(1);
+                const moneySaved = Math.round(itemsTracked * 1.95);
+                const co2Reduced = (wastePrevented * 2.5).toFixed(1);
+                const donationsMade = userDonations.length;
+                
+                return {
+                    success: true,
+                    data: {
+                        stats: {
+                            itemsTracked,
+                            expiringSoon,
+                            wastePrevented,
+                            moneySaved,
+                            co2Reduced,
+                            donationsMade
+                        },
+                        wasteChart: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            datasets: [{
+                                label: 'Food Waste (kg)',
+                                data: [12, 19, 8, 5, 4, 3],
+                                backgroundColor: [
+                                    'rgba(231, 76, 60, 0.7)',
+                                    'rgba(231, 76, 60, 0.7)',
+                                    'rgba(243, 156, 18, 0.7)',
+                                    'rgba(39, 174, 96, 0.7)',
+                                    'rgba(39, 174, 96, 0.7)',
+                                    'rgba(39, 174, 96, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(231, 76, 60, 1)',
+                                    'rgba(231, 76, 60, 1)',
+                                    'rgba(243, 156, 18, 1)',
+                                    'rgba(39, 174, 96, 1)',
+                                    'rgba(39, 174, 96, 1)',
+                                    'rgba(39, 174, 96, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        co2Chart: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            datasets: [{
+                                label: 'CO₂ Reduction (kg)',
+                                data: [30, 47.5, 20, 12.5, 10, 7.5],
+                                borderColor: 'rgba(41, 128, 185, 1)',
+                                backgroundColor: 'rgba(41, 128, 185, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        categoryChart: {
+                            labels: ['Fruits', 'Vegetables', 'Dairy', 'Meat', 'Grains', 'Other'],
+                            datasets: [{
+                                data: [25, 20, 15, 10, 20, 10],
+                                backgroundColor: [
+                                    'rgba(39, 174, 96, 0.7)',
+                                    'rgba(52, 152, 219, 0.7)',
+                                    'rgba(155, 89, 182, 0.7)',
+                                    'rgba(231, 76, 60, 0.7)',
+                                    'rgba(241, 196, 15, 0.7)',
+                                    'rgba(149, 165, 166, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(39, 174, 96, 1)',
+                                    'rgba(52, 152, 219, 1)',
+                                    'rgba(155, 89, 182, 1)',
+                                    'rgba(231, 76, 60, 1)',
+                                    'rgba(241, 196, 15, 1)',
+                                    'rgba(149, 165, 166, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        donationChart: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            datasets: [{
+                                label: 'Donations Made',
+                                data: [2, 5, 3, 7, 4, 6],
+                                backgroundColor: 'rgba(155, 89, 182, 0.7)',
+                                borderColor: 'rgba(155, 89, 182, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        savingsChart: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            datasets: [{
+                                label: 'Money Saved ($)',
+                                data: [25, 40, 30, 50, 35, 60],
+                                backgroundColor: 'rgba(39, 174, 96, 0.7)',
+                                borderColor: 'rgba(39, 174, 96, 1)',
+                                borderWidth: 1,
+                                fill: true
+                            }]
+                        }
+                    }
+                };
+            }
+            
+            // Save methods
+            saveUsers() {
+                localStorage.setItem('smartBiteUsers', JSON.stringify(this.users));
+            }
+            
+            saveFoodItems() {
+                localStorage.setItem('smartBiteFoodItems', JSON.stringify(this.foodItems));
+            }
+            
+            saveShoppingList() {
+                localStorage.setItem('smartBiteShoppingList', JSON.stringify(this.shoppingList));
+            }
+            
+            saveDonations() {
+                localStorage.setItem('smartBiteDonations', JSON.stringify(this.donations));
+            }
+        }
+
+        // API Service - This will use the simulated backend
+        const apiService = {
+            backend: new SimulatedBackend(),
+            
+            // Helper function for API calls
+            async makeRequest(endpoint, options = {}) {
+                // In a real app, this would make actual HTTP requests
+                // For now, we'll simulate API calls with a delay
+                return new Promise((resolve) => {
+                    setTimeout(async () => {
+                        const token = localStorage.getItem('authToken');
+                        
+                        // Route the request to the appropriate backend method
+                        let result;
+                        try {
+                            if (endpoint === '/auth/register' && options.method === 'POST') {
+                                const userData = JSON.parse(options.body);
+                                result = await this.backend.register(userData);
+                            } else if (endpoint === '/auth/login' && options.method === 'POST') {
+                                const credentials = JSON.parse(options.body);
+                                result = await this.backend.login(credentials);
+                            } else if (endpoint === '/food-items' && options.method === 'GET') {
+                                result = await this.backend.getFoodItems(token);
+                            } else if (endpoint === '/food-items' && options.method === 'POST') {
+                                const itemData = JSON.parse(options.body);
+                                result = await this.backend.addFoodItem(itemData, token);
+                            } else if (endpoint.startsWith('/food-items/') && options.method === 'DELETE') {
+                                const id = endpoint.split('/')[2];
+                                result = await this.backend.deleteFoodItem(id, token);
+                            } else if (endpoint === '/shopping-list' && options.method === 'GET') {
+                                result = await this.backend.getShoppingList(token);
+                            } else if (endpoint === '/shopping-list' && options.method === 'POST') {
+                                const itemData = JSON.parse(options.body);
+                                result = await this.backend.addShoppingItem(itemData, token);
+                            } else if (endpoint.startsWith('/shopping-list/') && options.method === 'PUT') {
+                                const id = endpoint.split('/')[2];
+                                const updates = JSON.parse(options.body);
+                                result = await this.backend.updateShoppingItem(id, updates, token);
+                            } else if (endpoint.startsWith('/shopping-list/') && options.method === 'DELETE') {
+                                const id = endpoint.split('/')[2];
+                                result = await this.backend.deleteShoppingItem(id, token);
+                            } else if (endpoint === '/donations' && options.method === 'GET') {
+                                result = await this.backend.getDonations(token);
+                            } else if (endpoint === '/donations' && options.method === 'POST') {
+                                const donationData = JSON.parse(options.body);
+                                result = await this.backend.addDonation(donationData, token);
+                            } else if (endpoint === '/recipes' && options.method === 'GET') {
+                                result = await this.backend.getRecipes(token);
+                            } else if (endpoint === '/meal-plan' && options.method === 'GET') {
+                                result = await this.backend.getMealPlan(token);
+                            } else if (endpoint === '/recommendations' && options.method === 'GET') {
+                                result = await this.backend.getRecommendations(token);
+                            } else if (endpoint === '/analytics' && options.method === 'GET') {
+                                result = await this.backend.getAnalytics(token);
+                            } else {
+                                result = { success: false, message: 'Endpoint not found' };
+                            }
+                        } catch (error) {
+                            console.error('API error:', error);
+                            result = { success: false, message: 'Internal server error' };
+                        }
+                        
+                        resolve(result);
+                    }, 500); // Simulate network delay
+                });
+            },
+            
+            // Authentication
+            async register(userData) {
+                return await this.makeRequest('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify(userData)
+                });
+            },
+            
+            async login(credentials) {
+                return await this.makeRequest('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify(credentials)
+                });
+            },
+            
+            // Food Items
+            async getFoodItems() {
+                return await this.makeRequest('/food-items', { method: 'GET' });
+            },
+            
+            async addFoodItem(item) {
+                return await this.makeRequest('/food-items', {
+                    method: 'POST',
+                    body: JSON.stringify(item)
+                });
+            },
+            
+            async deleteFoodItem(id) {
+                return await this.makeRequest(`/food-items/${id}`, {
+                    method: 'DELETE'
+                });
+            },
+            
+            // Shopping List
+            async getShoppingList() {
+                return await this.makeRequest('/shopping-list', { method: 'GET' });
+            },
+            
+            async addShoppingItem(item) {
+                return await this.makeRequest('/shopping-list', {
+                    method: 'POST',
+                    body: JSON.stringify(item)
+                });
+            },
+            
+            async updateShoppingItem(id, updates) {
+                return await this.makeRequest(`/shopping-list/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(updates)
+                });
+            },
+            
+            async deleteShoppingItem(id) {
+                return await this.makeRequest(`/shopping-list/${id}`, {
+                    method: 'DELETE'
+                });
+            },
+            
+            // Donations
+            async getDonations() {
+                return await this.makeRequest('/donations', { method: 'GET' });
+            },
+            
+            async addDonation(donation) {
+                return await this.makeRequest('/donations', {
+                    method: 'POST',
+                    body: JSON.stringify(donation)
+                });
+            },
+            
+            // Analytics
+            async getAnalytics() {
+                return await this.makeRequest('/analytics', { method: 'GET' });
+            },
+            
+            // Recipes
+            async getRecipes() {
+                return await this.makeRequest('/recipes', { method: 'GET' });
+            },
+            
+            // Meal Plans
+            async getMealPlan() {
+                return await this.makeRequest('/meal-plan', { method: 'GET' });
+            },
+            
+            // Recommendations
+            async getRecommendations() {
+                return await this.makeRequest('/recommendations', { method: 'GET' });
+            }
+        };
+
+        // DOM Elements
+        const authButtons = document.getElementById('authButtons');
+        const userMenu = document.getElementById('userMenu');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const authModal = document.getElementById('authModal');
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const logoutLink = document.getElementById('logoutLink');
+        const addFoodBtn = document.getElementById('addFoodBtn');
+        const addFoodModal = document.getElementById('addFoodModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const addFoodForm = document.getElementById('addFoodForm');
+        const foodItemsContainer = document.getElementById('foodItemsContainer');
+        const foodItemsSpinner = document.getElementById('foodItemsSpinner');
+        const itemsTracked = document.getElementById('itemsTracked');
+        const expiringSoon = document.getElementById('expiringSoon');
+        const wastePrevented = document.getElementById('wastePrevented');
+        const moneySaved = document.getElementById('moneySaved');
+        const co2Reduced = document.getElementById('co2Reduced');
+        const donationsMade = document.getElementById('donationsMade');
+        const scannerBtn = document.getElementById('scannerBtn');
+        const manualAddBtn = document.getElementById('manualAddBtn');
+        const newsletterForm = document.getElementById('newsletterForm');
+        const addShoppingItemBtn = document.getElementById('addShoppingItemBtn');
+        const addShoppingItemModal = document.getElementById('addShoppingItemModal');
+        const closeShoppingModalBtn = document.getElementById('closeShoppingModalBtn');
+        const addShoppingItemForm = document.getElementById('addShoppingItemForm');
+        const shoppingItemsContainer = document.getElementById('shoppingItemsContainer');
+        const shoppingItemsSpinner = document.getElementById('shoppingItemsSpinner');
+        const recommendationsContainer = document.getElementById('recommendationsContainer');
+        const recommendationsSpinner = document.getElementById('recommendationsSpinner');
+        const recipesContainer = document.getElementById('recipesContainer');
+        const recipesSpinner = document.getElementById('recipesSpinner');
+        const mealPlanContainer = document.getElementById('mealPlanContainer');
+        const mealPlanSpinner = document.getElementById('mealPlanSpinner');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = {
+            dashboard: document.getElementById('dashboardSection'),
+            analytics: document.getElementById('analyticsSection'),
+            recipes: document.getElementById('recipesSection'),
+            shopping: document.getElementById('shoppingSection'),
+            'meal-plan': document.getElementById('mealPlanSection'),
+            donation: document.getElementById('donationSection'),
+            preservation: document.getElementById('preservationSection')
+        };
+
+        // Initialize Charts
+        let wasteChart, co2Chart, categoryChart, donationChart, savingsChart;
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'exclamation-triangle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.getElementById('notificationContainer').appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Authentication UI
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.classList.add('active');
+            registerForm.classList.remove('active');
+        });
+
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.classList.add('active');
+            loginForm.classList.remove('active');
+        });
+
+        loginBtn.addEventListener('click', () => {
+            authModal.style.display = 'flex';
+            loginTab.click();
+        });
+
+        signupBtn.addEventListener('click', () => {
+            authModal.style.display = 'flex';
+            registerTab.click();
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const result = await apiService.login({ email, password });
+            
+            if (result && result.success) {
+                localStorage.setItem('authToken', result.token);
+                localStorage.setItem('currentUser', JSON.stringify(result.user));
+                showNotification('Login successful!', 'success');
+                updateUIForUser();
+                authModal.style.display = 'none';
+                loginForm.reset();
+            } else {
+                showNotification(result?.message || 'Login failed', 'error');
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+            
+            const result = await apiService.register({ name, email, password });
+            
+            if (result && result.success) {
+                showNotification('Registration successful! Please login.', 'success');
+                loginTab.click();
+                registerForm.reset();
+            } else {
+                showNotification(result?.message || 'Registration failed', 'error');
+            }
+        });
+
+        // Navigation
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Update active nav link
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show the selected section
+                const sectionId = link.getAttribute('data-section');
+                Object.values(sections).forEach(section => {
+                    section.style.display = 'none';
+                });
+                sections[sectionId].style.display = 'block';
+                
+                // Load section data
+                loadSectionData(sectionId);
+            });
+        });
+
+        // User menu
+        userMenu.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('show');
+        });
+
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            showNotification('Logged out successfully', 'success');
+            updateUIForGuest();
+            dropdownMenu.classList.remove('show');
+        });
+
+        // Modal functionality
+        addFoodBtn.addEventListener('click', () => {
+            addFoodModal.style.display = 'flex';
+        });
+
+        manualAddBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addFoodModal.style.display = 'flex';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            addFoodModal.style.display = 'none';
+        });
+
+        addShoppingItemBtn.addEventListener('click', () => {
+            addShoppingItemModal.style.display = 'flex';
+        });
+
+        closeShoppingModalBtn.addEventListener('click', () => {
+            addShoppingItemModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === addFoodModal) {
+                addFoodModal.style.display = 'none';
+            }
+            if (e.target === addShoppingItemModal) {
+                addShoppingItemModal.style.display = 'none';
+            }
+            if (e.target === authModal) {
+                authModal.style.display = 'none';
+            }
+            if (!userMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+
+        // Form submissions
+        addFoodForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const foodName = document.getElementById('foodName').value;
+            const foodCategory = document.getElementById('foodCategory').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const quantity = document.getElementById('quantity').value;
+            
+            const result = await apiService.addFoodItem({
+                name: foodName,
+                category: foodCategory,
+                expiryDate,
+                quantity: parseInt(quantity)
+            });
+            
+            if (result && result.success) {
+                // Update UI
+                loadFoodItems();
+                updateStats();
+                
+                // Reset form and close modal
+                addFoodForm.reset();
+                addFoodModal.style.display = 'none';
+                
+                showNotification(`${foodName} added to your inventory!`, 'success');
+            } else {
+                showNotification('Failed to add food item', 'error');
+            }
+        });
+
+        addShoppingItemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const itemName = document.getElementById('shoppingItemName').value;
+            const category = document.getElementById('shoppingItemCategory').value;
+            const quantity = document.getElementById('shoppingItemQuantity').value;
+            const priority = document.getElementById('shoppingItemPriority').value;
+            
+            const result = await apiService.addShoppingItem({
+                name: itemName,
+                category,
+                quantity: parseInt(quantity),
+                priority
+            });
+            
+            if (result && result.success) {
+                // Update UI
+                loadShoppingList();
+                
+                // Reset form and close modal
+                addShoppingItemForm.reset();
+                addShoppingItemModal.style.display = 'none';
+                
+                showNotification(`${itemName} added to your shopping list!`, 'success');
+            } else {
+                showNotification('Failed to add shopping item', 'error');
+            }
+        });
+
+        // Scanner simulation
+        scannerBtn.addEventListener('click', () => {
+            showNotification('Scanner activated! Point your camera at a food item or barcode.', 'warning');
+            // In a real app, this would activate the device camera
+            // Simulate adding a scanned item
+            setTimeout(async () => {
+                const result = await apiService.addFoodItem({
+                    name: 'Scanned Item',
+                    category: 'other',
+                    expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    quantity: 1
+                });
+                
+                if (result && result.success) {
+                    loadFoodItems();
+                    updateStats();
+                    showNotification('Scanned item added to your inventory!', 'success');
+                } else {
+                    showNotification('Failed to add scanned item', 'error');
+                }
+            }, 1500);
+        });
+
+        // Newsletter form
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showNotification('Thanks for subscribing to Smart Bite AI updates!', 'success');
+            newsletterForm.reset();
+        });
+
+        // Load section data
+        async function loadSectionData(sectionId) {
+            switch (sectionId) {
+                case 'dashboard':
+                    loadFoodItems();
+                    loadRecommendations();
+                    break;
+                case 'analytics':
+                    loadAnalytics();
+                    break;
+                case 'recipes':
+                    loadRecipes();
+                    break;
+                case 'shopping':
+                    loadShoppingList();
+                    break;
+                case 'meal-plan':
+                    loadMealPlan();
+                    break;
+                case 'donation':
+                    loadDonations();
+                    break;
+            }
+        }
+
+        // Load food items from API
+        async function loadFoodItems() {
+            foodItemsSpinner.style.display = 'block';
+            foodItemsContainer.innerHTML = '';
+            
+            const result = await apiService.getFoodItems();
+            foodItemsSpinner.style.display = 'none';
+            
+            if (result && result.success) {
+                const foodItems = result.data;
+                
+                if (foodItems.length === 0) {
+                    foodItemsContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Your food inventory is empty</p>';
+                    return;
+                }
+                
+                foodItems.forEach(item => {
+                    const foodItemElement = document.createElement('div');
+                    foodItemElement.className = 'food-item';
+                    foodItemElement.innerHTML = `
+                        <div class="food-info">
+                            <div class="food-icon" style="background-color: ${getCategoryColor(item.category)};">
+                                <i class="fas fa-${getCategoryIcon(item.category)}"></i>
+                            </div>
+                            <div class="food-details">
+                                <h4>${item.name}</h4>
+                                <p>Added: ${formatDate(item.addedDate)}</p>
+                            </div>
+                        </div>
+                        <div class="expiration ${getExpiryStatus(item.expiryDate)}">${getExpiryText(item.expiryDate)}</div>
+                        <div class="actions">
+                            <button class="action-btn" data-id="${item.id}" data-action="consume"><i class="fas fa-utensils"></i></button>
+                            <button class="action-btn" data-id="${item.id}" data-action="donate"><i class="fas fa-share-alt"></i></button>
+                            <button class="action-btn" data-id="${item.id}" data-action="delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    foodItemsContainer.appendChild(foodItemElement);
+                });
+                
+                // Add event listeners to action buttons
+                const actionButtons = document.querySelectorAll('.action-btn');
+                actionButtons.forEach(button => {
+                    button.addEventListener('click', async function() {
+                        const id = this.getAttribute('data-id');
+                        const action = this.getAttribute('data-action');
+                        const foodItem = this.closest('.food-item');
+                        
+                        if (action === 'consume') {
+                            showNotification('Added to consumption plan!', 'success');
+                            foodItem.style.opacity = '0.7';
+                        } else if (action === 'donate') {
+                            // Add donation and remove food item
+                            const foodItems = await apiService.getFoodItems();
+                            if (foodItems && foodItems.success) {
+                                const itemToDonate = foodItems.data.find(item => item.id === id);
+                                if (itemToDonate) {
+                                    const donationResult = await apiService.addDonation({
+                                        itemName: itemToDonate.name,
+                                        quantity: itemToDonate.quantity,
+                                        category: itemToDonate.category
+                                    });
+                                    
+                                    if (donationResult && donationResult.success) {
+                                        await apiService.deleteFoodItem(id);
+                                        loadFoodItems();
+                                        loadDonations();
+                                        updateStats();
+                                        showNotification(`${itemToDonate.name} donated successfully!`, 'success');
+                                    } else {
+                                        showNotification('Failed to donate item', 'error');
+                                    }
+                                }
+                            }
+                        } else if (action === 'delete') {
+                            if (confirm('Mark this item as wasted?')) {
+                                const result = await apiService.deleteFoodItem(id);
+                                if (result && result.success) {
+                                    loadFoodItems();
+                                    updateStats();
+                                    showNotification('Item removed from inventory', 'success');
+                                } else {
+                                    showNotification('Failed to delete item', 'error');
+                                }
+                            }
+                        }
+                    });
+                });
+            } else {
+                foodItemsContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Failed to load food items</p>';
+            }
+        }
+
+        // Load shopping list from API
+        async function loadShoppingList() {
+            shoppingItemsSpinner.style.display = 'block';
+            shoppingItemsContainer.innerHTML = '';
+            
+            const result = await apiService.getShoppingList();
+            shoppingItemsSpinner.style.display = 'none';
+            
+            if (result && result.success) {
+                const shoppingItems = result.data;
+                
+                if (shoppingItems.length === 0) {
+                    shoppingItemsContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Your shopping list is empty</p>';
+                    return;
+                }
+                
+                shoppingItems.forEach(item => {
+                    const shoppingItemElement = document.createElement('div');
+                    shoppingItemElement.className = 'shopping-item';
+                    shoppingItemElement.innerHTML = `
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="item-${item.id}" ${item.completed ? 'checked' : ''}>
+                            <label for="item-${item.id}" style="margin-left: 10px; ${item.completed ? 'text-decoration: line-through; color: var(--gray);' : ''}">
+                                ${item.name} (${item.quantity})
+                                <span class="status-badge ${item.priority === 'high' ? 'status-danger' : item.priority === 'medium' ? 'status-warning' : 'status-good'}" style="margin-left: 10px;">
+                                    ${item.priority}
+                                </span>
+                            </label>
+                        </div>
+                        <button class="action-btn" data-id="${item.id}" data-action="delete-shopping"><i class="fas fa-trash"></i></button>
+                    `;
+                    shoppingItemsContainer.appendChild(shoppingItemElement);
+                });
+                
+                // Add event listeners to checkboxes
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', async function() {
+                        const id = this.id.replace('item-', '');
+                        const result = await apiService.updateShoppingItem(id, { completed: this.checked });
+                        if (!result || !result.success) {
+                            showNotification('Failed to update item', 'error');
+                            this.checked = !this.checked; // Revert the change
+                        }
+                    });
+                });
+                
+                // Add event listeners to delete buttons
+                const deleteButtons = document.querySelectorAll('[data-action="delete-shopping"]');
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', async function() {
+                        const id = this.getAttribute('data-id');
+                        const result = await apiService.deleteShoppingItem(id);
+                        if (result && result.success) {
+                            loadShoppingList();
+                            showNotification('Item removed from shopping list', 'success');
+                        } else {
+                            showNotification('Failed to delete item', 'error');
+                        }
+                    });
+                });
+            } else {
+                shoppingItemsContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Failed to load shopping list</p>';
+            }
+        }
+
+        // Load donations from API
+        async function loadDonations() {
+            const result = await apiService.getDonations();
+            
+            if (result && result.success) {
+                const donations = result.data;
+                // Update donation stats
+                updateStats();
+            }
+        }
+
+        // Load recommendations from API
+        async function loadRecommendations() {
+            recommendationsSpinner.style.display = 'block';
+            recommendationsContainer.innerHTML = '';
+            
+            const result = await apiService.getRecommendations();
+            recommendationsSpinner.style.display = 'none';
+            
+            if (result && result.success) {
+                const recommendations = result.data;
+                
+                recommendations.forEach(rec => {
+                    const recElement = document.createElement('div');
+                    recElement.className = 'recommendation-item';
+                    recElement.innerHTML = `
+                        <h4><span class="status-badge ${rec.priority === 'high' ? 'status-danger' : rec.priority === 'medium' ? 'status-warning' : 'status-good'}">${rec.type}</span> ${rec.title}</h4>
+                        <p>${rec.description}</p>
+                    `;
+                    recommendationsContainer.appendChild(recElement);
+                });
+            } else {
+                recommendationsContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Failed to load recommendations</p>';
+            }
+        }
+
+        // Load recipes from API
+        async function loadRecipes() {
+            recipesSpinner.style.display = 'block';
+            recipesContainer.innerHTML = '';
+            
+            const result = await apiService.getRecipes();
+            recipesSpinner.style.display = 'none';
+            
+            if (result && result.success) {
+                const recipes = result.data;
+                
+                recipesContainer.innerHTML = '<div class="features-grid" id="recipesGrid"></div>';
+                const recipesGrid = document.getElementById('recipesGrid');
+                
+                recipes.forEach(recipe => {
+                    const recipeElement = document.createElement('div');
+                    recipeElement.className = 'feature-card';
+                    recipeElement.innerHTML = `
+                        <i class="fas fa-${recipe.icon || 'utensils'}"></i>
+                        <h3>${recipe.name}</h3>
+                        <p>Uses: ${recipe.ingredients.join(', ')}</p>
+                        <p>Difficulty: ${recipe.difficulty} | Time: ${recipe.time}</p>
+                        <button class="btn btn-primary" style="margin-top: 10px;">View Recipe</button>
+                    `;
+                    recipesGrid.appendChild(recipeElement);
+                });
+            } else {
+                recipesContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Failed to load recipes</p>';
+            }
+        }
+
+        // Load meal plan from API
+        async function loadMealPlan() {
+            mealPlanSpinner.style.display = 'block';
+            mealPlanContainer.innerHTML = '';
+            
+            const result = await apiService.getMealPlan();
+            mealPlanSpinner.style.display = 'none';
+            
+            if (result && result.success) {
+                const mealPlan = result.data;
+                
+                mealPlanContainer.innerHTML = '<div class="meal-plan" id="mealPlanContent"></div>';
+                const mealPlanContent = document.getElementById('mealPlanContent');
+                
+                mealPlan.days.forEach(day => {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'meal-day';
+                    dayElement.innerHTML = `
+                        <h3>${day.name}</h3>
+                        ${day.meals.map(meal => `
+                            <div class="meal-option">
+                                <input type="radio" id="${day.name.toLowerCase()}-${meal.id}" name="${day.name.toLowerCase()}" ${meal.selected ? 'checked' : ''}>
+                                <label for="${day.name.toLowerCase()}-${meal.id}">${meal.name} (Uses: ${meal.uses.join(', ')})</label>
+                            </div>
+                        `).join('')}
+                    `;
+                    mealPlanContent.appendChild(dayElement);
+                });
+            } else {
+                mealPlanContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Failed to load meal plan</p>';
+            }
+        }
+
+        // Load analytics from API
+        async function loadAnalytics() {
+            const result = await apiService.getAnalytics();
+            
+            if (result && result.success) {
+                updateCharts(result.data);
+                updateStatsFromAnalytics(result.data.stats);
+            } else {
+                showNotification('Failed to load analytics', 'error');
+            }
+        }
+
+        // Update statistics from API data
+        async function updateStats() {
+            const result = await apiService.getAnalytics();
+            
+            if (result && result.success) {
+                updateStatsFromAnalytics(result.data.stats);
+            }
+        }
+
+        function updateStatsFromAnalytics(stats) {
+            itemsTracked.textContent = stats.itemsTracked;
+            expiringSoon.textContent = stats.expiringSoon;
+            wastePrevented.textContent = `${stats.wastePrevented}kg`;
+            moneySaved.textContent = `$${stats.moneySaved}`;
+            co2Reduced.textContent = `${stats.co2Reduced}kg`;
+            donationsMade.textContent = stats.donationsMade;
+        }
+
+        // Update charts
+        function updateCharts(analyticsData) {
+            // Waste Chart
+            const wasteCtx = document.getElementById('wasteChart').getContext('2d');
+            
+            if (wasteChart) {
+                wasteChart.destroy();
+            }
+            
+            wasteChart = new Chart(wasteCtx, {
+                type: 'bar',
+                data: analyticsData.wasteChart,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Kilograms'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Food Waste Reduction',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // CO2 Chart
+            const co2Ctx = document.getElementById('co2Chart').getContext('2d');
+            
+            if (co2Chart) {
+                co2Chart.destroy();
+            }
+            
+            co2Chart = new Chart(co2Ctx, {
+                type: 'line',
+                data: analyticsData.co2Chart,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Kilograms of CO₂'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly CO₂ Reduction',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Category Chart
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            
+            if (categoryChart) {
+                categoryChart.destroy();
+            }
+            
+            categoryChart = new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: analyticsData.categoryChart,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Food Items by Category',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Donation Chart
+            const donationCtx = document.getElementById('donationChart').getContext('2d');
+            
+            if (donationChart) {
+                donationChart.destroy();
+            }
+            
+            donationChart = new Chart(donationCtx, {
+                type: 'bar',
+                data: analyticsData.donationChart,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Donations'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Food Donations',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Savings Chart
+            const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+            
+            if (savingsChart) {
+                savingsChart.destroy();
+            }
+            
+            savingsChart = new Chart(savingsCtx, {
+                type: 'line',
+                data: analyticsData.savingsChart,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Dollars Saved'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Money Savings',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Helper functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = now - date;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) return 'Today';
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            return `${Math.floor(diffDays / 30)} months ago`;
+        }
+
+        function getExpiryStatus(expiryDate) {
+            const today = new Date();
+            const expiry = new Date(expiryDate);
+            const diffTime = expiry - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) return 'expired';
+            if (diffDays <= 3) return 'expiring-soon';
+            return 'good';
+        }
+
+        function getExpiryText(expiryDate) {
+            const today = new Date();
+            const expiry = new Date(expiryDate);
+            const diffTime = expiry - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) return 'Expired';
+            if (diffDays === 0) return 'Expires today';
+            if (diffDays === 1) return 'Expires tomorrow';
+            if (diffDays <= 3) return `Expires in ${diffDays} days`;
+            return `Expires in ${diffDays} days`;
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                'fruits': '#27AE60',
+                'vegetables': '#F39C12',
+                'dairy': '#3498DB',
+                'meat': '#E74C3C',
+                'grains': '#F1C40F',
+                'beverages': '#9B59B6',
+                'other': '#95A5A6'
+            };
+            return colors[category] || '#95A5A6';
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'fruits': 'apple-alt',
+                'vegetables': 'carrot',
+                'dairy': 'cheese',
+                'meat': 'drumstick-bite',
+                'grains': 'bread-slice',
+                'beverages': 'wine-bottle',
+                'other': 'question-circle'
+            };
+            return icons[category] || 'question-circle';
+        }
+
+        // Update UI based on user state
+        function updateUIForUser() {
+            authButtons.style.display = 'none';
+            userMenu.style.display = 'flex';
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                userName.textContent = currentUser.name;
+                userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            }
+            
+            // Initialize user data
+            loadFoodItems();
+            loadShoppingList();
+            loadRecommendations();
+            loadDonations();
+            updateStats();
+        }
+
+        function updateUIForGuest() {
+            authButtons.style.display = 'flex';
+            userMenu.style.display = 'none';
+            
+            // Clear user-specific data
+            foodItemsContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Please log in to view your food inventory</p>';
+            shoppingItemsContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Please log in to view your shopping list</p>';
+            recommendationsContainer.innerHTML = '<p style="text-align: center; color: var(--gray);">Please log in to view recommendations</p>';
+            
+            // Reset stats
+            itemsTracked.textContent = '0';
+            expiringSoon.textContent = '0';
+            wastePrevented.textContent = '0kg';
+            moneySaved.textContent = '$0';
+            co2Reduced.textContent = '0kg';
+            donationsMade.textContent = '0';
+        }
+
+        // Initialize the app
+        function initApp() {
+            // Check if user is already logged in
+            const authToken = localStorage.getItem('authToken');
+            const currentUser = localStorage.getItem('currentUser');
+            
+            if (authToken && currentUser) {
+                updateUIForUser();
+            } else {
+                updateUIForGuest();
+            }
+            
+            // Initialize default charts
+            const analyticsData = {
+                wasteChart: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Food Waste (kg)',
+                        data: [12, 19, 8, 5, 4, 3],
+                        backgroundColor: [
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(243, 156, 18, 0.7)',
+                            'rgba(39, 174, 96, 0.7)',
+                            'rgba(39, 174, 96, 0.7)',
+                            'rgba(39, 174, 96, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(243, 156, 18, 1)',
+                            'rgba(39, 174, 96, 1)',
+                            'rgba(39, 174, 96, 1)',
+                            'rgba(39, 174, 96, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                co2Chart: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'CO₂ Reduction (kg)',
+                        data: [30, 47.5, 20, 12.5, 10, 7.5],
+                        borderColor: 'rgba(41, 128, 185, 1)',
+                        backgroundColor: 'rgba(41, 128, 185, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                categoryChart: {
+                    labels: ['Fruits', 'Vegetables', 'Dairy', 'Meat', 'Grains', 'Other'],
+                    datasets: [{
+                        data: [25, 20, 15, 10, 20, 10],
+                        backgroundColor: [
+                            'rgba(39, 174, 96, 0.7)',
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(155, 89, 182, 0.7)',
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(241, 196, 15, 0.7)',
+                            'rgba(149, 165, 166, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(39, 174, 96, 1)',
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(241, 196, 15, 1)',
+                            'rgba(149, 165, 166, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                donationChart: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Donations Made',
+                        data: [2, 5, 3, 7, 4, 6],
+                        backgroundColor: 'rgba(155, 89, 182, 0.7)',
+                        borderColor: 'rgba(155, 89, 182, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                savingsChart: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Money Saved ($)',
+                        data: [25, 40, 30, 50, 35, 60],
+                        backgroundColor: 'rgba(39, 174, 96, 0.7)',
+                        borderColor: 'rgba(39, 174, 96, 1)',
+                        borderWidth: 1,
+                        fill: true
+                    }]
+                }
+            };
+            
+            updateCharts(analyticsData);
+            
+            // Add event listeners
+            document.getElementById('getStartedBtn').addEventListener('click', function() {
+                signupBtn.click();
+            });
+            
+            // Close auth modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === authModal) {
+                    authModal.style.display = 'none';
+                }
+            });
+        }
+
+        // Run the app
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
